@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rogue Device Detection Tool</title>
+
+    <!-- Loading staticfiles -->
+    {% load staticfiles %}
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Custom CSS-->
+     <link rel="stylesheet" href="{% static 'SystemApp/css/custom-css/index.css' %}" type="text/css" />
+
+    <script src="{% static  'SystemApp/src/sigma.core.js' %}"></script>
+    <script src="{% static  'SystemApp/src/conrad.js' %}"></script>
+    <script src="{% static   'SystemApp/src/utils/sigma.utils.js' %}"></script>
+    <script src="{% static  'SystemApp/src/utils/sigma.polyfills.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/sigma.settings.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/classes/sigma.classes.dispatcher.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/classes/sigma.classes.configurable.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/classes/sigma.classes.graph.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/classes/sigma.classes.camera.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/classes/sigma.classes.quad.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/classes/sigma.classes.edgequad.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/captors/sigma.captors.mouse.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/captors/sigma.captors.touch.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/sigma.renderers.canvas.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/sigma.renderers.webgl.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/sigma.renderers.svg.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/sigma.renderers.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/webgl/sigma.webgl.nodes.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/webgl/sigma.webgl.nodes.fast.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/webgl/sigma.webgl.edges.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/webgl/sigma.webgl.edges.fast.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/webgl/sigma.webgl.edges.arrow.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.labels.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.hovers.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.nodes.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.edges.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.edges.curve.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.edges.arrow.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.edgehovers.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.edgehovers.curve.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/canvas/sigma.canvas.extremities.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/svg/sigma.svg.utils.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/svg/sigma.svg.nodes.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/svg/sigma.svg.edges.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/svg/sigma.svg.edges.curve.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/svg/sigma.svg.labels.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/renderers/svg/sigma.svg.hovers.def.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/middlewares/sigma.middlewares.rescale.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/middlewares/sigma.middlewares.copy.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/misc/sigma.misc.animation.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/misc/sigma.misc.bindEvents.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/misc/sigma.misc.bindDOMEvents.js' %}"></script>
+    <script src=" {% static 'SystemApp/src/misc/sigma.misc.drawHovers.js' %}"></script>
+    <!-- END SIGMA IMPORTS -->
+    <script src=" {% static 'SystemApp/plugins/sigma.parsers.json/sigma.parsers.json.js' %}"></script>
+    <script src=" {% static 'SystemApp/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js' %}"></script>
+
+</head>
+<body>
+
+
+    <div id="page-wrapper">
+
+        <nav id="NavTop">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <ul class="nav navbar-left">
+                         <li><a id="LogoBtn" href="" >Rogue Device Detection Tool</a></li>
+                   </ul>
+                </div>
+
+                <div class="collapse navbar-collapse" id="myNavbar">
+                      <ul class="nav navbar-nav navbar-right">
+                          <li><a id="logout" href="#"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
+                      </ul>
+                </div>
+            </div>
+        </nav>
+
+
+
+
+
+        <!--SideBar Menu -->
+
+        <div class="container-fluid">
+            <div class="row content">
+                <div class="col-sm-3 sidenav">
+
+
+                    <br>
+                    <br>
+                    <ul class=" nav">
+                        <img src="{% static 'SystemApp/img/vul.jpg' %}" class="user-image img-responsive" style="border-radius: 15px; "/>
+                    </ul>
+                    <br>
+
+                    <ul class="nav nav-pills nav-stacked">
+                        <li>
+                            <a href="/devices/">Device details</a>
+                        </li>
+                        <li><a href="/View Ports/">View Ports</a></li>
+                        </li>
+
+                        <li><a href="/Vulnerability/">Check vunlerabilities</a></li>
+                        </li>
+
+                    </ul><br>
+
+                    <div>
+                       <form id="add"  method="post"  action="/add/">{% csrf_token %}
+                       <input type="text" name="add" placeholder="Add device...."  />
+                          <input type="submit" value="save">
+                       </form>
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-sm-9 text-centre" >
+
+                    <h1></h1>
+
+                    <hr style="border: 10px;">
+
+                                                        <br><br><br>
+                                    <center>  <h1> Topology
+                                    </h1></center>
+                    <div id="graph-container" class="panel-body" style="background-color: white; width: 1300px; height: 600px; margin-left:50px; text-align:top; " >
+
+
+<!--<script src="./sigma.min.js"></script>-->
+                        <script>
+
+                            var g = {
+                                        nodes: [],
+                                        edges: []
+                                    };
+
+                                s = new sigma({
+                                    graph: g,
+                                    container: 'graph-container',
+                                    renderer: {
+                                        container: document.getElementById('graph-container'),
+                                        type: 'canvas'
+                                    },
+                                    settings: {
+                                        minNodeSize: 8,
+                                        maxNodeSize: 16,
+                                    }
+                                });
+
+                                var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+
+                                dragListener.bind('startdrag', function(event) {
+                                  console.log(event);
+                                });
+                                dragListener.bind('drag', function(event) {
+                                  console.log(event);
+                                });
+                                dragListener.bind('drop', function(event) {
+                                  console.log(event);
+                                });
+                                dragListener.bind('dragend', function(event) {
+                                  console.log(event);
+                                });
+
+
+                                sigma.parsers.json(
+                                       "{% static 'SystemApp/js/results.json'%}",
+                                        s,
+                                        function() {
+                                            // this is needed in case the original JSON doesn't have color / size / x-y attributes
+                                            var i,
+                                                    nodes = s.graph.nodes(),
+                                                    len = nodes.length;
+
+                                            for (i = 0; i < len; i++) {
+                                                nodes[i].x = Math.random();
+                                                nodes[i].y = Math.random();
+                                                nodes[i].size = s.graph.degree(nodes[i].id);
+
+                                            }
+
+                                            // Refresh the display:
+                                            s.refresh();
+
+                                            // ForceAtlas Layout
+                                            s.startForceAtlas2();
+                                        }
+                                );
+                                s.refresh();
+                        </script>
+
+                    </div>
+
+
+                    <div style=" margin-left:50px; margin-top:60px;">
+                    <form id="search" enctype="multipart/form-data"  class="searchbar" method="post" autocomplete="on" role="search" action="/search/">{% csrf_token %}
+                       <input name="search" type="text" placeholder="Search..." value="" tabindex="1" autocomplete="on" maxlength="40" class="f-input js-search-field" />
+                        <button type="submit" class="btn js-search-submit">
+                   <svg role="icon" class="svg-icon iconSearch" width="18" height="18" viewBox="0 0 15 15"><path d="M12.864 11.321L18 16.5 16.5 18l-5.178-5.136v-.357a7 7 0 1 1 1.186-1.186h.356zM7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10z"/></svg>
+               </button><br><br>
+                    </form>
+
+                         <div class="panel panel-default" style="length:800px">
+                         <!--<div class="panel-heading" style="text-align:centre;"> All Devices' Details</div> -->
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+
+                                    </thead>
+
+
+                                      {% for i in results %}
+
+                                          <p style="margin-left: 50px"> IP Address is :  {{i.0}} </p><br>
+                                          <p style="margin-left: 50px"> MAC Address is :  {{i.1}}</p><br>
+                                           <p style="margin-left: 50px"> PC Name is :{{i.2}}</p><br>
+                                           <p style="margin-left: 50px">  PC Status :{{i.3}}</p><br>
+
+
+                                    {% endfor %}
+                                </table>
+                            </div>
+
+                           </div>
+
+                           </div>
+
+
+                        
+
+                    </div>
+                        </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
